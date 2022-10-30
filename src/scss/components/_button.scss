@@ -12,6 +12,10 @@
   border: 1px solid transparent;
   @include noselect();
 
+  @media (max-width: 576px) {
+    min-width: auto;
+  }
+
   &,
   span {
     color: #fff;
@@ -93,6 +97,10 @@
     background-color: rgba(255, 255, 255, 0.25);
     margin-left: 14px;
     margin-right: 14px;
+
+    @media (max-width: 576px) {
+      display: none;
+    }
   }
 
   &--add {
@@ -138,11 +146,19 @@
     svg {
       margin-right: 8px;
       margin-bottom: 1px;
+
+      @media (max-width: 576px) {
+        margin: 0;
+      }
     }
 
     span {
       font-weight: 600;
       font-size: 16px;
+
+      @media (max-width: 576px) {
+        display: none;
+      }
     }
   }
 }

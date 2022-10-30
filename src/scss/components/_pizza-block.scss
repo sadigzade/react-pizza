@@ -3,10 +3,53 @@
 .pizza-block {
   width: 280px;
   text-align: center;
-  margin-bottom: 65px;
 
-  &:not(:nth-of-type(4n)) {
-    margin-right: 35px;
+  &:nth-child(4n) {
+    justify-self: end;
+  }
+
+  &:nth-child(4n + 2) {
+    justify-self: center;
+  }
+
+  &:nth-child(4n + 3) {
+    justify-self: center;
+  }
+
+  @media (max-width: 1400px) {
+    &:nth-child(4n) {
+      justify-self: auto;
+    }
+
+    &:nth-child(4n + 2) {
+      justify-self: auto;
+    }
+
+    &:nth-child(4n + 3) {
+      justify-self: auto;
+    }
+
+    &:nth-child(3n) {
+      justify-self: end;
+    }
+
+    &:nth-child(3n + 2) {
+      justify-self: center;
+    }
+  }
+
+  @media (max-width: 1060px) {
+    &:nth-child(3n) {
+      justify-self: auto;
+    }
+
+    &:nth-child(3n + 2) {
+      justify-self: auto;
+    }
+
+    &:nth-child(n) {
+      justify-self: center;
+    }
   }
 
   &__image {

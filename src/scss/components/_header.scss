@@ -12,6 +12,7 @@
 
   &__logo {
     display: flex;
+    align-items: center;
 
     img {
       margin-right: 15px;
@@ -27,6 +28,10 @@
 
     p {
       color: #7b7b7b;
+
+      @media (max-width: 740px) {
+        display: none;
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios';
 
 import { setCategoryId } from '../redux/slices/filterSlice';
 
@@ -28,17 +29,17 @@ const Home = () => {
   useEffect(() => {
     setIsLoading(true);
 
-    const sortBy = `sortBy=${sortType.sortProperty}`;
-    const order = 'order=desc';
-    const category = categoryId > 0 ? `category=${categoryId}` : '';
-    const search = searchValue ? `search=${searchValue}` : '';
+    const sortBy = `sortBy=${sortType}`;
+    const order = '&order=desc';
+    const category = categoryId > 0 ? `&category=${categoryId}` : '';
+    const search = searchValue ? `&search=${searchValue}` : '';
 
-    fetch(
-      `https://635ad7456f97ae73a637df53.mockapi.io/items?${sortBy}&${order}&${category}&${search}`,
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        setItems(json);
+    axios
+      .get(
+        `https://635ad7456f97ae73a637df53.mockapi.io/items?${sortBy}${order}${category}${search}`,
+      )
+      .then((response) => {
+        setItems(response.data);
         setIsLoading(false);
       });
 

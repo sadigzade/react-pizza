@@ -1,18 +1,23 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
+import qs from 'qs';
+import { useNavigate } from 'react-router-dom';
 
-import { setCategoryId } from '../redux/slices/filterSlice';
+import { setCategoryId, setFilters } from '../redux/slices/filterSlice';
 
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
-import Sort from '../components/Sort';
+import Sort, { list } from '../components/Sort';
 
 import { AppContext } from '../App';
 
 const Home = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isSearch = useRef(false);
+  const isMounted = useRef(false);
 
   const { categoryId, sort } = useSelector((state) => state.filter);
   const sortType = sort.sortProperty;
@@ -26,7 +31,7 @@ const Home = () => {
     dispatch(setCategoryId(id));
   };
 
-  useEffect(() => {
+  const fetshPizzas = () => {
     setIsLoading(true);
 
     const sortBy = `sortBy=${sortType}`;
@@ -42,6 +47,44 @@ const Home = () => {
         setItems(response.data);
         setIsLoading(false);
       });
+  };
+
+  useEffect(() => {
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortBy: sortType,
+        order: 'desc',
+        category: categoryId ? categoryId : 0,
+      });
+
+      navigate(`?${queryString}`);
+    }
+
+    isMounted.current = true;
+  }, [categoryId, sortType]);
+
+  useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
+      const sort = list.find((obj) => obj.sortProperty === params.sortBy);
+
+      dispatch(
+        setFilters({
+          ...params,
+          sort,
+        }),
+      );
+
+      isSearch.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isSearch.current) {
+      fetshPizzas();
+    }
+
+    isSearch.current = false;
 
     window.scrollTo(0, 0);
   }, [categoryId, sortType, searchValue]);

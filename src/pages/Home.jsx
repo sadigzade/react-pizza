@@ -54,7 +54,7 @@ const Home = () => {
       const queryString = qs.stringify({
         sortBy: sortType,
         order: 'desc',
-        category: categoryId ? categoryId : 0,
+        category: categoryId,
       });
 
       navigate(`?${queryString}`);

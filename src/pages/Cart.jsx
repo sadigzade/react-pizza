@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearItems } from '../redux/slices/cartSlice';
 
 import CartItem from '../components/CartItem';
+import CartEmpty from '../components/CartEmpty/CartEmpty';
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -13,6 +14,10 @@ const Cart = () => {
   const onClickClear = () => {
     dispatch(clearItems());
   };
+
+  if (!totalCount) {
+    return <CartEmpty />;
+  }
 
   return (
     <div className="container container--cart">

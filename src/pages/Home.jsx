@@ -1,8 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
-import qs from 'qs';
 import { useNavigate } from 'react-router-dom';
+import qs from 'qs';
 
 import { setCategoryId, setFilters } from '../redux/slices/filterSlice';
 
@@ -13,6 +12,8 @@ import Sort, { list } from '../components/Sort';
 
 import { AppContext } from '../App';
 
+import { fetchPizzas } from '../redux/slices/pizzasSlice';
+
 const Home = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -20,33 +21,34 @@ const Home = () => {
   const isMounted = useRef(false);
 
   const { categoryId, sort } = useSelector((state) => state.filter);
+  const { items, status } = useSelector((state) => state.pizza);
+
   const sortType = sort.sortProperty;
 
   const { searchValue } = useContext(AppContext);
 
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
 
   const onClickCategory = (id) => {
     dispatch(setCategoryId(id));
   };
 
-  const fetshPizzas = () => {
-    setIsLoading(true);
+  const getPizzas = async () => {
+    // setIsLoading(true);
 
     const sortBy = `sortBy=${sortType}`;
     const order = '&order=desc';
     const category = categoryId > 0 ? `&category=${categoryId}` : '';
     const search = searchValue ? `&search=${searchValue}` : '';
 
-    axios
-      .get(
-        `https://635ad7456f97ae73a637df53.mockapi.io/items?${sortBy}${order}${category}${search}`,
-      )
-      .then((response) => {
-        setItems(response.data);
-        setIsLoading(false);
-      });
+    dispatch(
+      fetchPizzas({
+        sortBy,
+        order,
+        category,
+        search,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -81,7 +83,7 @@ const Home = () => {
 
   useEffect(() => {
     if (!isSearch.current) {
-      fetshPizzas();
+      getPizzas();
     }
 
     isSearch.current = false;
@@ -99,7 +101,14 @@ const Home = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">{isLoading ? skeletons : pizzas}</div>
+      {status === 'error' ? (
+        <div className="content__error-info">
+          <h2>Произошла ошибка 😕</h2>
+          <p>К сожалению, не удалось получить пиццы. Попробуйте повторите попытку позже!</p>
+        </div>
+      ) : (
+        <div className="content__items">{status === 'loading' ? skeletons : pizzas}</div>
+      )}
     </div>
   );
 };

@@ -14,12 +14,12 @@ export const list: listType[] = [
   { name: 'алфавиту', sortProperty: 'title' },
 ];
 
-function Sort() {
+const Sort: React.FC = () => {
   const dispatch = useDispatch();
   const sort = useSelector(selectCart);
   const sortEl = useRef<HTMLDivElement>(null);
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
 
   const onClickListItem = (obj: listType) => {
     dispatch(setSort(obj));
@@ -27,8 +27,12 @@ function Sort() {
   };
 
   useEffect(() => {
-    const handleClickOutside = (event: any) => {
-      if (!event.path.includes(sortEl.current)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      const _event = event as MouseEvent & {
+        path: Node[];
+      };
+
+      if (sortEl.current && !_event.path.includes(sortEl.current)) {
         setOpen(false);
       }
     };
@@ -71,6 +75,6 @@ function Sort() {
       )}
     </div>
   );
-}
+};
 
 export default Sort;

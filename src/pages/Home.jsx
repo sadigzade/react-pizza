@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 
-import { setCategoryId, setFilters } from '../redux/slices/filterSlice';
+import { selectFilter, setCategoryId, setFilters } from '../redux/slices/filterSlice';
 
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock';
@@ -12,7 +12,7 @@ import Sort, { list } from '../components/Sort';
 
 import { AppContext } from '../App';
 
-import { fetchPizzas } from '../redux/slices/pizzasSlice';
+import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzasSlice';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -20,22 +20,16 @@ const Home = () => {
   const isSearch = useRef(false);
   const isMounted = useRef(false);
 
-  const { categoryId, sort } = useSelector((state) => state.filter);
-  const { items, status } = useSelector((state) => state.pizza);
+  const { categoryId, sort, searchValue } = useSelector(selectFilter);
+  const { items, status } = useSelector(selectPizzaData);
 
   const sortType = sort.sortProperty;
-
-  const { searchValue } = useContext(AppContext);
-
-  // const [isLoading, setIsLoading] = useState(true);
 
   const onClickCategory = (id) => {
     dispatch(setCategoryId(id));
   };
 
   const getPizzas = async () => {
-    // setIsLoading(true);
-
     const sortBy = `sortBy=${sortType}`;
     const order = '&order=desc';
     const category = categoryId > 0 ? `&category=${categoryId}` : '';

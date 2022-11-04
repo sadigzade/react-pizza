@@ -12,7 +12,7 @@ import Sort, { list } from '../components/Sort';
 
 import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzasSlice';
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const isSearch = useRef(false);
@@ -23,8 +23,8 @@ const Home = () => {
 
   const sortType = sort.sortProperty;
 
-  const onClickCategory = (id) => {
-    dispatch(setCategoryId(id));
+  const onClickCategory = (index: number) => {
+    dispatch(setCategoryId(index));
   };
 
   const getPizzas = async () => {
@@ -34,6 +34,7 @@ const Home = () => {
     const search = searchValue ? `&search=${searchValue}` : '';
 
     dispatch(
+      // @ts-ignore
       fetchPizzas({
         sortBy,
         order,
@@ -84,7 +85,7 @@ const Home = () => {
   }, [categoryId, sortType, searchValue]);
 
   const skeletons = [...new Array(6)].map((val, index) => <Skeleton key={index} />);
-  const pizzas = items.map((obj) => <PizzaBlock {...obj} key={obj.id} />);
+  const pizzas = items.map((obj: any) => <PizzaBlock {...obj} key={obj.id} />);
 
   return (
     <div className="container">

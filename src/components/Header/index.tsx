@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -7,7 +6,7 @@ import Search from './Search';
 import { cartSelector } from '../../redux/slices/cartSlice';
 
 function Header() {
-  const { items, totalPrice, totalCount } = useSelector(cartSelector);
+  const { totalPrice, totalCount } = useSelector(cartSelector);
 
   return (
     <div className="header">

@@ -1,20 +1,21 @@
 import React, { useEffect, useRef } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
-
-import { selectFilter, setCategoryId, setFilters } from '../redux/slices/filterSlice';
 
 import Categories from '../components/Categories';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Sort, { list } from '../components/Sort';
 
-import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
+import { selectFilter, setCategoryId, setFilters } from '../redux/slices/filterSlice';
+import { fetchPizzas, SearchPizzaParams, selectPizzaData } from '../redux/slices/pizzaSlice';
+
+import { useAppDispatch } from '../redux/store';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isSearch = useRef<boolean>(false);
   const isMounted = useRef<boolean>(false);
 
@@ -34,7 +35,6 @@ const Home: React.FC = () => {
     const search = searchValue ? `&search=${searchValue}` : '';
 
     dispatch(
-      // @ts-ignore
       fetchPizzas({
         sortBy,
         order,
@@ -59,22 +59,6 @@ const Home: React.FC = () => {
   }, [categoryId, sortType]);
 
   useEffect(() => {
-    if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
-      const sort = list.find((obj) => obj.sortProperty === params.sortBy);
-
-      dispatch(
-        setFilters({
-          ...params,
-          sort,
-        }),
-      );
-
-      isSearch.current = true;
-    }
-  }, []);
-
-  useEffect(() => {
     if (!isSearch.current) {
       getPizzas();
     }
@@ -83,6 +67,23 @@ const Home: React.FC = () => {
 
     window.scrollTo(0, 0);
   }, [categoryId, sortType, searchValue]);
+
+  useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1)) as unknown as SearchPizzaParams;
+      const sort = list.find((obj) => obj.sortProperty === params.sortBy);
+
+      dispatch(
+        setFilters({
+          searchValue: params.search,
+          categoryId: Number(params.category),
+          sort: sort || list[0],
+        }),
+      );
+
+      isSearch.current = true;
+    }
+  }, []);
 
   const skeletons = [...new Array(6)].map((val, index) => <Skeleton key={index} />);
   const pizzas = items.map((obj: any) => <PizzaBlock {...obj} key={obj.id} />);

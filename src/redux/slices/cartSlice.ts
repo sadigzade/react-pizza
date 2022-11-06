@@ -1,6 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 
-const initialState = {
+export type CartItem = {
+  id: string;
+  imageUrl: string;
+  title: string;
+  type: string;
+  size: number;
+  price: number;
+  count: number;
+};
+
+interface CartSliceState {
+  totalPrice: number;
+  totalCount: number;
+  items: CartItem[];
+}
+
+const initialState: CartSliceState = {
   totalPrice: 0,
   totalCount: 0,
   items: [],
@@ -10,7 +27,7 @@ const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addItem(state, action) {
+    addItem(state, action: PayloadAction<CartItem>) {
       const findItem = state.items.find((obj) => obj.id === action.payload.id);
 
       if (findItem) {
@@ -25,7 +42,7 @@ const cartSlice = createSlice({
       state.totalPrice = state.items.reduce((sum, obj) => obj.price * obj.count + sum, 0);
       state.totalCount = state.items.reduce((count, obj) => obj.count + count, 0);
     },
-    minusItem(state, action) {
+    minusItem(state, action: PayloadAction<string>) {
       const findItem = state.items.find((obj) => obj.id === action.payload);
 
       if (findItem) {
@@ -35,7 +52,7 @@ const cartSlice = createSlice({
         state.totalCount = state.items.reduce((count, obj) => obj.count + count, 0);
       }
     },
-    removeItem(state, action) {
+    removeItem(state, action: PayloadAction<string>) {
       state.items = state.items.filter((obj) => obj.id !== action.payload);
       state.totalPrice = state.items.reduce((sum, obj) => obj.price * obj.count + sum, 0);
       state.totalCount = state.items.reduce((count, obj) => obj.count + count, 0);
@@ -48,8 +65,9 @@ const cartSlice = createSlice({
   },
 });
 
-export const cartSelector = (state) => state.cart;
-export const selectCartItemById = (id) => (state) => state.cart.items.find((obj) => obj.id === id);
+export const cartSelector = (state: RootState) => state.cart;
+export const selectCartItemById = (id: string) => (state: RootState) =>
+  state.cart.items.find((obj) => obj.id === id);
 
 export const { addItem, removeItem, minusItem, clearItems } = cartSlice.actions;
 

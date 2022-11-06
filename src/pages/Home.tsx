@@ -10,7 +10,7 @@ import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Sort, { list } from '../components/Sort';
 
-import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzasSlice';
+import { fetchPizzas, selectPizzaData } from '../redux/slices/pizzaSlice';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -38,7 +38,7 @@ const Home: React.FC = () => {
       fetchPizzas({
         sortBy,
         order,
-        category,
+        categoryId: category,
         search,
       }),
     );

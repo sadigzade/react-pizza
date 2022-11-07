@@ -5,8 +5,9 @@ import debounce from 'lodash.debounce';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faXmark } from '@fortawesome/free-solid-svg-icons';
 
+import { setSearchValue } from '../../../redux/filter/slice';
+
 import classes from './Search.module.scss';
-import { setSearchValue } from '../../../redux/slices/filterSlice';
 
 const Search: React.FC = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const Search: React.FC = () => {
     inputEl.current?.focus();
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const updateSearchValue = useCallback(
     debounce((value: string) => {
       dispatch(setSearchValue(value));

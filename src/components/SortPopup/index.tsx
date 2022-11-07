@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, memo } from 'react';
 
-import { setSort, SortPropertyEnum, SortType } from '../../redux/slices/filterSlice';
+import { setSort } from '../../redux/filter/slice';
+import { SortPropertyEnum, SortType } from '../../redux/filter/types';
 import { useAppDispatch } from '../../redux/store';
 
 type listType = {

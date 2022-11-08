@@ -3,10 +3,9 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import qs from 'qs';
 
-import Categories from '../components/Categories';
-import PizzaBlock from '../components/PizzaBlock';
-import Skeleton from '../components/PizzaBlock/Skeleton';
-import SortPopup, { list } from '../components/SortPopup';
+import { Categories, PizzaBlock, Skeleton, SortPopup } from '../components';
+
+import { list } from '../components/SortPopup';
 
 import { useAppDispatch } from '../redux/store';
 import { selectFilter } from '../redux/filter/selectors';

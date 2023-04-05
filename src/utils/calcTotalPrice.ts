@@ -1,5 +1,5 @@
-import { CartItem } from '../redux/cart/types';
+import { TPizza } from "../services/types/data";
 
-export const calcTotalPrice = (items: CartItem[]) => {
-  return items.reduce((sum, obj) => obj.price * obj.count + sum, 0);
+export const calcTotalPrice = (items: TPizza[]) => {
+  return items.reduce((sum, obj) => (obj.count ? obj.price * obj.count + sum : 0), 0);
 };

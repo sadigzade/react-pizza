@@ -1,5 +1,5 @@
-import { CartItem } from '../redux/cart/types';
+import { TPizza } from "../services/types/data";
 
-export const calcTotalCount = (items: CartItem[]) => {
-  return items.reduce((count, obj) => obj.count + count, 0);
+export const calcTotalCount = (items: TPizza[]) => {
+  return items.reduce((count, obj) => (obj.count ? obj.count + count : 0), 0);
 };
